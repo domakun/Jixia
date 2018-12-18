@@ -1,0 +1,16 @@
+1.数据库准备
+--department
+部门department		id，部门名称，部门外键（管理部门）    
+
+--emplyee
+员工employee		id，name，no（工号）,邮件,pwd,sex,department,remark 
+角色role			id,name(班主任，上课教师等),    		
+员工-角色employee_role	id,employeeid,roleid
+权限authority		id,name,remark	
+角色-权限role_authority	id,roleid,authorityid
+
+--clazz
+clazz			id,begin,end,clazztype,coursetype,clazzno,f_qqgroup,f_classteacher,flag,remark
+
+--stu
+stu			id,clazzid,stuno,pwd,name,telephone,email,qq,university,major,degree,gender,idnumber,resource,employee,registritiondate,optioncourse,
