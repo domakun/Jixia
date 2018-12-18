@@ -35,7 +35,7 @@ exports.select = select ;
 // 封装一个select方法
 function select(username,func){
 	var result = [] ; 
-	 MongoClient .connect(url,{useNewUrlParser:true},function(error, db){
+	 MongoClient.connect(url,{useNewUrlParser:true},function(error, db){
 	 	if(error){
 	 		console.log(error);
 	 	}else{
