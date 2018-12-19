@@ -5,9 +5,6 @@ const bodyParser = require('body-parser') ;
 const url = require('url') ;
 const cookieParser = require('cookie-parser') ;
 app.use(cookieParser('lifeissimpebutyoumadeitcomplicated'));
-const employeecon = require('./server/controller/employeecon.js') ;
-const departmentcon = require('./server/controller/departmentcon.js') ;
-const clazzcon = require('./server/controller/clazzcon.js') ;
 // 设置资源后缀名和默认地址
 app.set('view engine' , 'html') ;
 app.engine('.html',require('ejs').__express) ;
