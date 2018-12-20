@@ -40,8 +40,8 @@ app.get('/*',function(req,res){
 app.post('/*',function(req,res){
     var pathname = url.parse(req.url).pathname ;
     if(pathname == '/addJd'){
-        JdController.insert(req,res) ;
-    }else{
+        
+    }else{JdController.insert(req,res) ;
         res.end('index')
     }
 });

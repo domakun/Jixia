@@ -12,10 +12,10 @@ function queryByCutPage(pageNow,func){
         result.jdData = r ;
         JdModule.getCount(function(res){
             res = res[0]['count(*)'] ;
+            result.totalRows = res ;
             res = res/publicdata.max ;
             res = Math.ceil(res) ;
             result.totalPages = res ;
-            console.log('>>>>>',result)
             func(result) ;
         }) ;
 
