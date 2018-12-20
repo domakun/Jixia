@@ -14,21 +14,36 @@ app.set('views',__dirname+'/view') ;
 app.use(express.static(__dirname+'/public')) ;
 app.use(bodyParser.urlencoded({extended:false})) ;
 
+//跨域问题
+app.all('*', function(req, res, next) {
+    console.log(req.method);
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header('Access-Control-Allow-Headers', 'Content-type');
+    res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS,PATCH");
+    res.header('Access-Control-Max-Age',1728000);//预请求缓存20天
+    next();
+});
+
 // 判断路由，把路由分发给子控制器
 app.get('/*',function(req,res){
     var pathname = url.parse(req.url).pathname ;
-    res.render('index')
+    // res.render('index')
     console.log(pathname);
     if(pathname == '/getAllJd'){
         JdController.showJdS(req,res)
     }else{
-        res.render('index')
+        res.end('index')
     }
 
 });
 
 app.post('/*',function(req,res){
     var pathname = url.parse(req.url).pathname ;
+    if(pathname == '/addJd'){
+        JdController.insert(req,res) ;
+    }else{
+        res.end('index')
+    }
 });
 
 app.listen(9999,function (argument) {
