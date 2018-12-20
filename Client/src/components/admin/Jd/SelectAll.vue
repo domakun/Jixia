@@ -43,6 +43,13 @@
       </el-table-column>
     </el-table>
 <!--分页-->
+    <el-pagination
+      :page-size="5"
+      :pager-count="5"
+      layout="prev, pager, next"
+      :total="totalRows"
+      @current-change="current_change">
+    </el-pagination>
   </div>
 
 </template>
@@ -54,7 +61,9 @@
           return {
             jdData:[],
             pageNow:1,
-            totalPages:1
+            totalPages:1,
+            totalRows:1,
+            current:1
           }
         },
       methods:{
@@ -69,9 +78,14 @@
             console.log("get发送Ajax请求成功", response.data);
             this.jdData = response.data.jdData;
             this.totalPage = response.data.totalPages;
+            this.totalRows = response.data.totalRows;
           }).catch(response=> {
             console.log("get发送Ajax请求失败",response);
           })
+        },
+        current_change:function (pageNow) {
+          this.pageNow = pageNow ;
+          this.refresh()
         }
       },
         created: function () {
@@ -79,6 +93,7 @@
             console.log("get发送Ajax请求成功", response.data);
             this.jdData = response.data.jdData;
             this.totalPage = response.data.totalPages;
+            this.totalRows = response.data.totalRows;
           }).catch(response=> {
             console.log("get发送Ajax请求失败",response);
           })
