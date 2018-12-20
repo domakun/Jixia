@@ -10,7 +10,7 @@
           <el-menu-item @click='toJd()'  index='2'>景点管理</el-menu-item>
           <el-menu-item @click='toGl()' index='3'>攻略管理</el-menu-item>
         </el-menu>
-        
+
       </div>
       <div class="panel">
         <router-view></router-view>
@@ -19,7 +19,7 @@
     <div class='foot'>
       foot
 
-    </div >  
+    </div >
   </div>
 </template>
 <script>
@@ -41,7 +41,7 @@
 <style>
 .content {
   width: 1080px ;
-  background-color: green ;
+  /*background-color: green ;*/
   margin: 0 auto ;
 }
 .head {
@@ -51,14 +51,14 @@
   color: white ;
 }
 .main {
-  background-color: pink ;
+  /*background-color: pink ;*/
   width: 100% ;
-} 
+}
 .link {
   background-color: white ;
 }
 .panel {
-  background-color: pink ;
+  /*background-color: pink ;*/
   height: 500px ;
 }
 .foot {
