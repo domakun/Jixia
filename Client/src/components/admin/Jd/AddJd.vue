@@ -81,6 +81,7 @@
           })
           this.jdObj.jd_addr = array.join(',') ;
         },
+
         check:function () {
           for(var item in this.jdObj){
             if(item.trim() == ''){

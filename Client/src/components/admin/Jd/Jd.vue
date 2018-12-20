@@ -6,8 +6,11 @@
           <SelectAll></SelectAll>
         </div>
       </el-tab-pane>
-      <el-tab-pane label="查找景点">查找景点</el-tab-pane>
-      <el-tab-pane label="管理景点">管理景点</el-tab-pane>
+      <el-tab-pane label="查找景点">
+        <div>
+          <SelectJd></SelectJd>
+        </div>
+      </el-tab-pane>
       <el-tab-pane label="添加景点">
         <div class="addJd">
           <AddJd></AddJd>
@@ -19,11 +22,13 @@
 <script>
   import SelectAll from './SelectAll'
   import AddJd from './AddJd'
+  import  SelectJd from './SelectJd'
   export default {
     name:'Jd',
     components: {
       SelectAll:SelectAll,
-      AddJd:AddJd
+      AddJd:AddJd,
+      SelectJd:SelectJd
     },
     data:function () {
       return {

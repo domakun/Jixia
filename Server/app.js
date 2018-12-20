@@ -31,16 +31,16 @@ app.get('/*',function(req,res){
     console.log(pathname);
     if(pathname == '/getAllJd'){
         JdController.showJdS(req,res)
-    }else{
-        res.end('index')
+    }else if(pathname == '/getSomeJds'){
+        JdController.showSomeJdS(req,res)
+    }else if(pathname == '/deleteJd'){
+        JdController.deleteJd(req,res)
     }
-
 });
 
 app.post('/*',function(req,res){
     var pathname = url.parse(req.url).pathname ;
     if(pathname == '/addJd'){
-        
     }else{JdController.insert(req,res) ;
         res.end('index')
     }

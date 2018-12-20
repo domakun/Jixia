@@ -43,4 +43,37 @@ function insert(jd_name,jd_info,jd_addr,imgs,func){
     }) ;
 }
 
-// insert('jd_name','jd_info','jd_addr','imgs',function(){})
+// 查询筛选页面数据和总页数
+exports.queryByCondition = queryByCondition ;
+function queryByCondition(pageNow,jd_addr,jd_id,jd_name,func){
+    console.log(pageNow,'pageNow');
+    var first = (pageNow-1)*publicdata.max ;
+    var result = {} ;
+    console.log(first);
+    JdModule.selectSomeJds(first,publicdata.max,jd_addr,jd_id,jd_name,function(r){
+        // 回调查询总页数
+        result.jdData = r ;
+        JdModule.getSomeCount(jd_addr,jd_id,jd_name,function(res){
+            res = res[0]['count(*)'] ;
+            result.totalRows = res ;
+            res = res/publicdata.max ;
+            res = Math.ceil(res) ;
+            result.totalPages = res ;
+            func(result) ;
+        }) ;
+
+    }) ;
+}
+// 删除
+exports.deleteJd = deleteJd ;
+function deleteJd(jd_id,func){
+    JdModule.deleteJd(jd_id,function(result){
+        if(result.affectedRows == 0){
+            func('false')
+        }else {
+            func('success')
+        }
+    }) ;
+}
+// deleteJd(11,function(){})
+// queryByCondition(1,'%','%','%s%',function(){})

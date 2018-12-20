@@ -27,3 +27,32 @@ function insert(req,res){
     res.json(result) ;
   }) ;
 }
+
+exports.showSomeJdS = showSomeJdS  ;
+function showSomeJdS(req,res){
+     for(var item in req.query){
+      if(req.query[item] == ''){
+        req.query[item] = '%' ;
+      }else if(item != 'pageNow') {
+        req.query[item] = '%'+req.query[item]+'%' ;
+      }
+     }
+     console.log('+++++++',req.query) ;
+    var pageNow = req.query.pageNow ;
+    var jd_addr = req.query.jd_addr ;
+    var jd_id = req.query.jd_id ;
+    var jd_name = req.query.jd_name ;
+    JdService.queryByCondition(pageNow,jd_addr,jd_id,jd_name,function(result){
+        // console.log(result,">>>result") ;
+        res.json(result) ;
+    }) ;
+}
+
+// 删除
+exports.deleteJd = deleteJd  ;
+function deleteJd(req,res){
+  var jd_id = req.query.jd_id ; 
+  JdService.deleteJd(jd_id,function(result){
+    res.json(result) ;
+  }) ;
+}

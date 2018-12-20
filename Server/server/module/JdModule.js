@@ -37,3 +37,35 @@ function checkName(jd_name,func){
         func(result) ;
     }) ; 
 }
+
+exports.selectSomeJds = selectSomeJds ;
+function selectSomeJds (first,max,jd_addr,jd_id,jd_name,func) {
+    var sql = 'select jd_info,jd_id,jd_name,jd_addr,imgs,param1,param2,param3 from jd where jd_addr like ? and  jd_id like ?  and jd_name like ?  limit ?,?' ;
+    var param = [jd_addr,jd_id,jd_name,first,max] ;
+    dbutils.select(sql,param,function(result){
+        console.log(result);
+        func(result) ;
+    }) ;
+}
+//查询总页数
+exports.getSomeCount = getSomeCount
+ function getSomeCount (jd_addr,jd_id,jd_name,func) {
+    var sql = 'select count(*)  from jd where jd_addr like ? and  jd_id like ?  and jd_name like ? ' ;
+    var param = [jd_addr,jd_id,jd_name] ;
+    dbutils.select(sql,param,function(result){
+        func(result) ;
+    }) ;
+}
+
+//删除景点
+exports.deleteJd = deleteJd
+ function deleteJd (jd_id,func) {
+    var sql = 'delete from jd where jd_id = ?' ;
+    var param = [jd_id] ;
+    dbutils.select(sql,param,function(result){
+        func(result) ;
+    }) ;
+}
+// deleteJd(10,function(){}) ;
+// getSomeCount('%','%','%s%',function(){})
+// selectSomeJds(0,5,'%','%','%',function(){});
