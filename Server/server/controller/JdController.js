@@ -17,8 +17,6 @@ function showJdS(req,res){
 // 添加
 exports.insert = insert  ;
 function insert(req,res){
-  console.log(req.body)
-  jd_name,jd_info,jd_addr,imgs
   var jd_name = req.body.jd_name ; 
   var jd_info = req.body.jd_info ; 
   var jd_addr = req.body.jd_addr ; 
@@ -53,6 +51,19 @@ exports.deleteJd = deleteJd  ;
 function deleteJd(req,res){
   var jd_id = req.query.jd_id ; 
   JdService.deleteJd(jd_id,function(result){
+    res.json(result) ;
+  }) ;
+}
+
+// 修改
+exports.updateJd = updateJd  ;
+function updateJd(req,res){
+  var jd_id = req.body.jd_id ; 
+  var jd_name = req.body.jd_name ; 
+  var jd_info = req.body.jd_info ; 
+  var jd_addr = req.body.jd_addr ; 
+  var imgs = req.body.imgs ; 
+  JdService.updateJd(jd_id,jd_name,jd_info,jd_addr,imgs,function(result){
     res.json(result) ;
   }) ;
 }

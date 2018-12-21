@@ -66,6 +66,18 @@ exports.deleteJd = deleteJd
         func(result) ;
     }) ;
 }
+
+//修改景点
+// 增加景点
+exports.updateJd = updateJd ;
+function updateJd (jd_id,jd_name,jd_info,jd_addr,imgs,func) {
+    var sql = 'UPDATE jd SET jd_name = ?,jd_info=?,jd_addr=?,imgs=? WHERE jd_id = ? ' ; 
+    var param = [jd_name,jd_info,jd_addr,imgs,jd_id] ;
+    dbutils.select(sql,param,function(result){
+        func(result) ;
+    }) ;
+}
+// updateJd (1,'jd_name','jd_info','jd_addr','imgs',function(){})
 // deleteJd(10,function(){}) ;
 // getSomeCount('%','%','%s%',function(){})
 // selectSomeJds(0,5,'%','%','%',function(){});

@@ -81,6 +81,7 @@
         name: "SelectJd",
       data:function () {
           return {
+            url:'http://192.168.2.101:9999',
             jdObj:{
               jd_addr:'',
               jd_name:'',
@@ -111,7 +112,7 @@
               this.jdObj[item]= '' ;
             }
           }
-          var url = `http://192.168.2.101:9999/getSomeJds?pageNow=${this.pageNow}&jd_addr=${this.jdObj.jd_addr}&jd_name=${this.jdObj.jd_name}&jd_id=${this.jdObj.jd_id}`
+          var url = `${this.url}/getSomeJds?pageNow=${this.pageNow}&jd_addr=${this.jdObj.jd_addr}&jd_name=${this.jdObj.jd_name}&jd_id=${this.jdObj.jd_id}`
           this.$axios.get(url, {}).then(response => {
             console.log("get发送Ajax请求成功", response.data)
             this.jdData = response.data.jdData
