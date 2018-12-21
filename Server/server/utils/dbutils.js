@@ -5,9 +5,15 @@ const mysql = require('mysql') ;
 // 连接池对象
 const pool = mysql.createPool({
     host:'192.168.2.101',
-    user:'admin',
-    password:'123',
-    database:'jixia',
+	user:'admin',
+	password:'123',
+	database:'jixia',
+
+// 	host: 'localhost',
+//     user:'user',
+//     password:'123',
+//     database:'jixia',
+	
     port:3306 ,
 }) ;
 exports.pool = pool ;
@@ -21,11 +27,11 @@ function select(sql,param,func){
         if(err){
             console.log(err) ;
         }else{
-            console.log(sql,param);
+            // console.log(sql,param);
             conn.query(sql,param,function(error,result){
                 conn.release() ;      //没有关闭连接，将连接对象返回连接池
                 // console.log(sql) ;
-                console.log(result) ;
+                console.log(result,'--->dbutil的result') ;
                 func(result) ;     //回调函数
             })
         }

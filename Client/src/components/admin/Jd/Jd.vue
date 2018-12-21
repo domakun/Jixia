@@ -48,7 +48,7 @@
         })
       }
     }
-  }
+  } 
 </script>
 <style scoped>
   .el-tab-pane,

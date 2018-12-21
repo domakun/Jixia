@@ -84,7 +84,7 @@
           console.log(jdObj);
           var jd_name = jdObj.jd_name ;
           var jd_id = jdObj.jd_id ;
-        //  删除
+        //  删除 
           this.$confirm('此操作将永久删除景点: '+jd_name+' ,是否继续?', '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消'
@@ -119,7 +119,7 @@
           });
         },
         refresh:function () {
-          this.$axios.get("http://192.168.2.101:9999/getAllJd?pageNow="+this.pageNow, {}).then(response => {
+          this.$axios.get("http://localhost:9999/getAllJd?pageNow="+this.pageNow, {}).then(response => {
             console.log("get发送Ajax请求成功", response.data);
             this.jdData = response.data.jdData;
             this.totalPage = response.data.totalPages;
@@ -134,7 +134,7 @@
         }
       },
         created: function () {
-          this.$axios.get("http://192.168.2.101:9999/getAllJd?pageNow="+this.pageNow, {}).then(response => {
+          this.$axios.get("http://localhost:9999/getAllJd?pageNow="+this.pageNow, {}).then(response => {
             console.log("get发送Ajax请求成功", response.data);
             this.jdData = response.data.jdData;
             this.totalPage = response.data.totalPages;
