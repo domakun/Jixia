@@ -75,5 +75,28 @@ function deleteJd(jd_id,func){
         }
     }) ;
 }
+
+// 添加景点
+exports.updateJd = updateJd ; 
+function updateJd(jd_id,jd_name,jd_info,jd_addr,imgs,func){
+    // 先检查名字是否重复
+    JdModule.checkName(jd_name,function(res){
+        if(res.length != 0){
+            // 存在此名称，返回相应数据
+            func('exits');
+        }else{
+            // 不存在此名字,执行更改
+            jd_id = Number(jd_id) ;
+            JdModule.updateJd(jd_id,jd_name,jd_info,jd_addr,imgs,function(result){
+                if(result.affectedRows == 0){
+                    func('error');
+                }else{
+                    func('success') ;
+                }
+            }) ; 
+        }
+    }) ;
+}
+// updateJd('1','jd_neeame','jd_info','jd_addr','imgseeeee',function(){})
 // deleteJd(11,function(){})
 // queryByCondition(1,'%','%','%s%',function(){})

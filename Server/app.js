@@ -55,8 +55,9 @@ app.get('/*',function(req,res){
 app.post('/*',function(req,res){
     var pathname = url.parse(req.url).pathname ;
     if(pathname == '/addJd'){
-    }else{JdController.insert(req,res) ;
-        res.end('index')
+        JdController.insert(req,res)
+    }else if(pathname == '/updateJd'){
+         JdController.updateJd(req,res)
     }
 });
 

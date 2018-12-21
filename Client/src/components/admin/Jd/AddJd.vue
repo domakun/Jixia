@@ -52,7 +52,7 @@
           params.append('imgs', this.jdObj.jd_imgs);
           this.$axios({
             method: 'post',
-            url:'http://192.168.2.101:9999/addJd',
+            url:this.url+'/addJd',
             data:params
           }).then((res)=>{
             if(res.data == 'success'){
@@ -94,6 +94,7 @@
       },
       data(){
           return{
+            url:'http://192.168.2.101:9999',
             jdObj:{
               jd_name:'',
               jd_addr:'',
