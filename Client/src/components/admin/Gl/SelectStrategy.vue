@@ -87,13 +87,12 @@
 						this.glObj[item] = ''
 					}
 				}
-				var url = `http://localhost:9999/searchGl?
+				var url = `/searchGl?
 				pageNow=${this.pageNow}&jd_addr=${this.glObj.jd_addr}&
 				jd_name=${this.glObj.jd_name}&
 				content=${this.glObj.content}&
 				date=${this.glObj.date}&
 				author_id=${this.glObj.author_id}`
-				// var url = `http://localhost:9999/searchGl`
 				this.$axios.get(url,{}).then(response => {
 					console.log("get发送Ajax请求成功", response.data);
 					this.StrategyData = response.data.StrategyData;
@@ -117,7 +116,7 @@
 					confirmButtonText: '确定',
 					cancelButtonText: '取消'
 				}).then(() => {
-					this.$axios.get("http://localhost:9999/deleteGl?glb_id=" + glb_id, {}).then(response => {
+					this.$axios.get("/deleteGl?glb_id=" + glb_id, {}).then(response => {
 						console.log("get发送请求成功", response.data);
 						if (response.data == 'success') {
 							this.$message({
@@ -146,17 +145,6 @@
 			},
 		}
 	}
-	
-	
-	
-	// 					param: {
-	// 						pageNow: this.pageNow,
-	// 						jd_addr : this.glObj.jd_addr,
-	// 						jd_name: this.glObj.jd_name,
-	// 						content: this.glObj.content,
-	// 						date: this.glObj.date,
-	// 						author_id: this.glObj.author_id
-	// 					}
 	
 </script>
 
