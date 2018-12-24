@@ -41,8 +41,6 @@ app.get('/*',function(req,res){
         JdController.getJdId(req,res)
     }else if(pathname == '/jump2showJd'){   //跳转展示景点的页面
         JdController.jump2showJd(req,res)
-    }else if(pathname == '/jump2showJd'){
-        GlController.showGl(req,res)
     }else if(pathname == '/getSomeGl'){//查看攻略接口，，管理界面暂时用不了，不要删
         GlController.showSomeGl(req,res)
     }else if(pathname == '/deleteGl'){
