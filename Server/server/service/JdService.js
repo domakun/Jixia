@@ -6,7 +6,7 @@ exports.queryByCutPage = queryByCutPage ;
 function queryByCutPage(pageNow,func){
     var first = (pageNow-1)*publicdata.max ;
     var result = {} ;
-    console.log(first);
+    // console.log(first);
     JdModule.selectAllJds(first,publicdata.max,function(r){
         // 回调查询总页数
         result.jdData = r ;
@@ -97,6 +97,14 @@ function updateJd(jd_id,jd_name,jd_info,jd_addr,imgs,func){
         }
     }) ;
 }
+// 根据景点id查询
+exports.getJdById = getJdById ;
+function getJdById(jd_id,func){
+    JdModule.getJdById(jd_id,function(r){
+            func(r) ;
+    }) ;
+}
+// getJdById(5,function(){})
 // updateJd('1','jd_neeame','jd_info','jd_addr','imgseeeee',function(){})
 // deleteJd(11,function(){})
 // queryByCondition(1,'%','%','%s%',function(){})

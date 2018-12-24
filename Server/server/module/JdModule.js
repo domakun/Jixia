@@ -77,6 +77,18 @@ function updateJd (jd_id,jd_name,jd_info,jd_addr,imgs,func) {
         func(result) ;
     }) ;
 }
+// 根据景点id拿到所有信息
+exports.getJdById = getJdById ; 
+function getJdById(jd_id,func){
+    var sql = 'select jd_info,jd_id,jd_name,jd_addr,imgs,param1,param2,param3 from jd where jd_id=?' ; 
+    dbutils.select(sql,[jd_id],function(result){
+        func(result) ;
+    }) ; 
+}
+
+// 根据景点查询
+
+// getJdById(5,function(){});
 // updateJd (1,'jd_name','jd_info','jd_addr','imgs',function(){})
 // deleteJd(10,function(){}) ;
 // getSomeCount('%','%','%s%',function(){})

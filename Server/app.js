@@ -4,6 +4,7 @@ const app = express() ;
 const bodyParser = require('body-parser') ;
 const url = require('url') ;
 const cookieParser = require('cookie-parser') ;
+const cors = require('cors')
 
 const JdController = require('./server/controller/JdController.js') ;
 const GlController = require('./server/controller/GlController.js') ;
@@ -18,15 +19,10 @@ app.use(express.static(__dirname+'/public')) ;
 app.use(bodyParser.urlencoded({extended:false})) ;
 
 //跨域问题
-app.all('*', function(req, res, next) {
-    console.log(req.method);
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header('Access-Control-Allow-Headers', 'Content-type');
-	res.header('Access-Control-Allow-Headers', 'X-Test-Cors');
-    res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS,PATCH");
-    res.header('Access-Control-Max-Age',1728000);//预请求缓存20天
-    next();
-});
+app.use(cors({
+    credentials: true,
+        origin: 'http://localhost:8080', // web前端服务器地址
+}))
 
 // 判断路由，把路由分发给子控制器
 app.get('/*',function(req,res){
@@ -34,20 +30,24 @@ app.get('/*',function(req,res){
     // res.render('index')
     console.log(pathname);
     if(pathname == '/getAllJd'){
-        JdController.showJdS(req,res)
+        JdController.showJdS(req,res)       //获取所有景点信息
     }else if(pathname == '/getSomeJds'){
-        JdController.showSomeJdS(req,res)
+        JdController.showSomeJdS(req,res)   //获取筛选的景点信息
     }else if(pathname == '/deleteJd'){
-        JdController.deleteJd(req,res)
-    }else if(pathname == '/getAllGl'){
+        JdController.deleteJd(req,res)      //删除景点
+    }else if(pathname == '/getJdById'){
+        JdController.getJdById(req,res)     //根据景点id获取信息
+    }else if(pathname == '/getJdId'){       //获取景点的id
+        JdController.getJdId(req,res)
+    }else if(pathname == '/jump2showJd'){   //跳转展示景点的页面
+        JdController.jump2showJd(req,res)
+    }else if(pathname == '/jump2showJd'){
         GlController.showGl(req,res)
     }else if(pathname == '/getSomeGl'){//查看攻略接口，，管理界面暂时用不了，不要删
         GlController.showSomeGl(req,res)
     }else if(pathname == '/deleteGl'){
         GlController.deleteGl(req,res)
     }else if(pathname == '/searchGl'){
-		// console.log('xxxxxxxxxx');
-		// console.log(req.query)
         GlController.searchGl(req,res)
     }
 });

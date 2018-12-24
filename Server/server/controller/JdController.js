@@ -67,3 +67,25 @@ function updateJd(req,res){
     res.json(result) ;
   }) ;
 }
+
+// 根据景点id拿到信息
+exports.getJdById = getJdById  ;
+function getJdById(req,res){
+  var jd_id = req.query.jd_id ;
+  console.log('jd_id>>>',jd_id)
+  JdService.getJdById(jd_id,function(result){
+    res.json(result)
+  }) ;
+}
+
+exports.getJdId = getJdId  ;
+function getJdId (req,res) {
+    res.json({'jd_id':req.cookies.jd_id})
+}
+
+exports.jump2showJd = jump2showJd  ;
+function jump2showJd (req,res) {
+    var jd_id = req.query.jd_id ;
+    res.cookie('jd_id',jd_id)
+    res.render('showJd');
+}
