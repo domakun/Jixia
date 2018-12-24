@@ -53,6 +53,7 @@
 		name: 'SelectStrategy',
 		data() {
 			return {
+			  url:'http://192.168.2.101:9999',
 				glObj: {
 					jd_addr: '',
 					content: '',
@@ -73,7 +74,7 @@
 				return date;
 			},
 			showGl: function() {
-				
+
 			},
 			current_change:function (pageNow) {
 				this.pageNow = pageNow ;
@@ -82,12 +83,12 @@
 			refresh: function() {
 				for(var item in this.glObj) {
 					var i = this.glObj[item];
-					if(i == undefined || i.trim() == '') {  
+					if(i == undefined || i.trim() == '') {
 						// 去掉前后空格仍为空
 						this.glObj[item] = ''
 					}
 				}
-				var url = `/searchGl?
+				var url = this.url+`/searchGl?
 				pageNow=${this.pageNow}&jd_addr=${this.glObj.jd_addr}&
 				jd_name=${this.glObj.jd_name}&
 				content=${this.glObj.content}&
@@ -96,7 +97,7 @@
 				this.$axios.get(url,{}).then(response => {
 					console.log("get发送Ajax请求成功", response.data);
 					this.StrategyData = response.data.StrategyData;
-					this.totalPage = response.data.totalPages; 
+					this.totalPage = response.data.totalPages;
 					this.totalRows = response.data.totalRows;
 					console.log(this.totalRows);
 				}).catch(response => {
@@ -145,7 +146,7 @@
 			},
 		}
 	}
-	
+
 </script>
 
 <style>

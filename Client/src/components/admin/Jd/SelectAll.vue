@@ -132,7 +132,7 @@
           }).then((res)=>{
             if(res.data == 'success'){
               this.$message({
-                message: '景点秀修改成功',
+                message: '景点修改成功',
                 type: 'success'
               });
               this.dialogFormVisible = false
