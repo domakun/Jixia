@@ -76,11 +76,11 @@ function deleteJd(jd_id,func){
     }) ;
 }
 
-// 添加景点
+// 修改景点
 exports.updateJd = updateJd ; 
 function updateJd(jd_id,jd_name,jd_info,jd_addr,imgs,func){
     // 先检查名字是否重复
-    JdModule.checkName(jd_name,function(res){
+    JdModule.checkNameWhenUpdate(jd_name,jd_id,function(res){
         if(res.length != 0){
             // 存在此名称，返回相应数据
             func('exits');

@@ -12,6 +12,7 @@
     "body-parser": "^1.18.3",
     "cookie-parser": "^1.4.3",
     "cors": "^2.8.5",
+    "cos-js-sdk-v5": "^0.5.3",
     "cos-nodejs-sdk-v5": "^2.5.5",
     "ejs": "^2.6.1",
     "express": "^4.16.4",

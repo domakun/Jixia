@@ -32,10 +32,22 @@ function addJd (jd_name,jd_info,jd_addr,imgs,func) {
 // 查找是否已经存在此景点
 exports.checkName = checkName ; 
 function checkName(jd_name,func){
-    var sql = 'select jd_info,jd_id,jd_name,jd_addr,imgs,param1,param2,param3 from jd where jd_name=?' ; 
+    var sql = 'select jd_info,jd_id,jd_name,jd_addr,imgs,param1,param2,param3 from jd where jd_name=?' ;
     dbutils.select(sql,[jd_name],function(result){
         func(result) ;
     }) ; 
+}
+
+
+// 查找是否已经存在此景点
+exports.checkNameWhenUpdate = checkNameWhenUpdate ;
+function checkNameWhenUpdate(jd_name,jd_id,func){
+    var sql = 'select jd_info,jd_id,jd_name,jd_addr,imgs,param1,param2,param3 from jd where jd_name=? and jd_id!=?' ;
+
+    dbutils.select(sql,[jd_name,jd_id],function(result){
+        console.log(result)
+        func(result)
+    }) ;
 }
 
 exports.selectSomeJds = selectSomeJds ;

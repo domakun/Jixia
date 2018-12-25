@@ -43,7 +43,7 @@
         width="150">
         <template slot-scope="scope">
           <el-button @click="updateJd(scope.row)" type="text" size="small">修改</el-button>
-          <el-button @click="showJd" type="text" size="small">查看</el-button>
+          <el-button  @click="showJd(scope.row)" type="text" size="small"><a :href="'http://localhost:9999/jump2showJd?jd_id='+scope.row.jd_id">查看</a></el-button>
           <el-button @click="deleteJd(scope.row)" type="text" size="small">删除</el-button>
         </template>
       </el-table-column>
@@ -116,118 +116,124 @@
             options: regionData
           }
         },
-      methods:{
-        postUpdate:function () {
-          console.log(this.jdObj);
-          var params = new URLSearchParams();
-          params.append('jd_name', this.jdObj.jd_name);       //你要传给后台的参数值 key/value
-          params.append('jd_addr', this.jdObj.jd_addr);
-          params.append('jd_info', this.jdObj.jd_info);
-          params.append('imgs', this.jdObj.jd_imgs);
-          params.append('jd_id', this.jdObj.jd_id);
-          this.$axios({
-            method: 'post',
-            url:this.url+'/updateJd',
-            data:params
-          }).then((res)=>{
-            if(res.data == 'success'){
-              this.$message({
-                message: '景点修改成功',
-                type: 'success'
-              });
-              this.dialogFormVisible = false
-              this.refresh()
-            }else {
-              this.$message({
-                message: '景点已经存在了，请修改景点名字吧',
-                type: 'warning'
-              });
-            }
+        methods:{
+          postUpdate:function () {
+            console.log(this.jdObj);
+            var params = new URLSearchParams();
+            params.append('jd_name', this.jdObj.jd_name);       //你要传给后台的参数值 key/value
+            params.append('jd_addr', this.jdObj.jd_addr);
+            params.append('jd_info', this.jdObj.jd_info);
+            params.append('imgs', this.jdObj.jd_imgs);
+            params.append('jd_id', this.jdObj.jd_id);
+            this.$axios({
+              method: 'post',
+              url:this.url+'/updateJd',
+              data:params
+            }).then((res)=>{
+              if(res.data == 'success'){
+                this.$message({
+                  message: '景点修改成功',
+                  type: 'success'
+                });
+                this.dialogFormVisible = false
+                this.refresh()
+              }else {
+                this.$message({
+                  message: '景点已经存在了，请修改景点名字吧',
+                  type: 'warning'
+                });
+              }
 
-          });
-        },
-        addrChange:function () {
-          //地址改变
-          var array = [] ;
-          this.area.forEach(function (item,index,arr) {
-            array[index] = CodeToText[item] ;
-          })
-          this.jdObj.jd_addr = array.join(',') ;
-        },
-        handleClose(done) {
-          this.$confirm('确认关闭？')
-            .then(_ => {
-              done();
+            });
+          },
+          addrChange:function () {
+            //地址改变
+            var array = [] ;
+            this.area.forEach(function (item,index,arr) {
+              array[index] = CodeToText[item] ;
             })
-            .catch(_ => {});
-        },
-        updateJd:function (jdObj) {
-          this.dialogFormVisible = true
-          this.jdObj.jd_id = jdObj.jd_id
-          this.jdObj.jd_name = jdObj.jd_name
-          this.jdObj.jd_addr = jdObj.jd_addr
-          this.jdObj.jd_info = jdObj.jd_info
-          this.jdObj.jd_imgs = jdObj.imgs
-          var array = jdObj.jd_addr.split(',')
+            this.jdObj.jd_addr = array.join(',') ;
+          },
+          handleClose(done) {
+            this.$confirm('确认关闭？')
+              .then(_ => {
+                done();
+              })
+              .catch(_ => {});
+          },
+          updateJd:function (jdObj) {
+            this.dialogFormVisible = true
+            this.jdObj.jd_id = jdObj.jd_id
+            this.jdObj.jd_name = jdObj.jd_name
+            this.jdObj.jd_addr = jdObj.jd_addr
+            this.jdObj.jd_info = jdObj.jd_info
+            this.jdObj.jd_imgs = jdObj.imgs
+            var array = jdObj.jd_addr.split(',')
 
-          this.area[0] = TextToCode[array[0]].code
-          this.area[1] = TextToCode[array[0]][array[1]].code
-          this.area[2] = TextToCode[array[0]][array[1]][array[2]].code
-        },
-        showJd:function () {
-        },
-        deleteJd:function (jdObj) {
-          console.log(jdObj);
-          var jd_name = jdObj.jd_name ;
-          var jd_id = jdObj.jd_id ;
-        //  删除
-          this.$confirm('此操作将永久删除景点: '+jd_name+' ,是否继续?', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消'
-          }).then(() => {
-            this.$axios.get("http://192.168.2.101:9999/deleteJd?jd_id="+jd_id, {}).then(response => {
+            this.area[0] = TextToCode[array[0]].code
+            this.area[1] = TextToCode[array[0]][array[1]].code
+            this.area[2] = TextToCode[array[0]][array[1]][array[2]].code
+          },
+          showJd:function (jdObj) {
+            console.log('oh...')
+            var jd_id = jdObj.jd_id
+            this.$axios.get("http://192.168.2.101:9999/showJd?jd_id="+jd_id, {}).then(response => {
               console.log("get发送Ajax请求成功", response.data);
-              if(response.data == 'success'){
+            }).catch(response=> {
+              console.log('false_2_send_msg')
+            })
+          },
+          deleteJd:function (jdObj) {
+            console.log(jdObj);
+            var jd_name = jdObj.jd_name ;
+            var jd_id = jdObj.jd_id ;
+          //  删除
+            this.$confirm('此操作将永久删除景点: '+jd_name+' ,是否继续?', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消'
+            }).then(() => {
+              this.$axios.get("http://192.168.2.101:9999/deleteJd?jd_id="+jd_id, {}).then(response => {
+                console.log("get发送Ajax请求成功", response.data);
+                if(response.data == 'success'){
+                  this.$message({
+                    type: 'success',
+                    message: '删除成功!'
+                  });
+                  this.refresh() ;
+                }else{
+                  this.$message({
+                    type: 'info',
+                    message: '删除失败!'
+                  });
+                }
+              }).catch(response=> {
                 this.$message({
                   type: 'success',
                   message: '删除成功!'
                 });
-                this.refresh() ;
-              }else{
-                this.$message({
-                  type: 'info',
-                  message: '删除失败!'
-                });
-              }
+              })
 
-            }).catch(response=> {
+            }).catch(() => {
               this.$message({
-                type: 'success',
-                message: '删除成功!'
+                type: 'info',
+                message: '已取消删除'
               });
-            })
-
-          }).catch(() => {
-            this.$message({
-              type: 'info',
-              message: '已取消删除'
             });
-          });
-        },
-        refresh:function () {
-          this.$axios.get(this.url+"/getAllJd?pageNow="+this.pageNow, {}).then(response => {
-            console.log("get发送Ajax请求成功", response.data);
-            this.jdData = response.data.jdData;
-            this.totalPage = response.data.totalPages;
-            this.totalRows = response.data.totalRows;
-          }).catch(response=> {
-            console.log("get发送Ajax请求失败",response);
-          })
-        },
-        current_change:function (pageNow) {
-          this.pageNow = pageNow ;
-          this.refresh()
-        }
+          },
+          refresh:function () {
+            this.$axios.get(this.url+"/getAllJd?pageNow="+this.pageNow, {}).then(response => {
+              console.log("get发送Ajax请求成功", response.data);
+              this.jdData = response.data.jdData;
+              this.totalPage = response.data.totalPages;
+              this.totalRows = response.data.totalRows;
+            }).catch(response=> {
+              console.log("get发送Ajax请求失败",response);
+            })
+          },
+          current_change:function (pageNow) {
+            this.pageNow = pageNow ;
+            this.refresh()
+          }
       },
         created: function () {
           this.$axios.get("http://192.168.2.101:9999/getAllJd?pageNow="+this.pageNow, {}).then(response => {

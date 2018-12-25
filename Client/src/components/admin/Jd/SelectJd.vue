@@ -1,14 +1,14 @@
 <template>
     <div class="panel">
-      <el-form :inline="true" :model="jdObj" class="demo-form-inline">
+      <el-form :inline="true" :model="s_jdObj" class="demo-form-inline">
         <el-form-item label="地区">
-          <el-input v-model="jdObj.jd_addr" placeholder="地区关键字"></el-input>
+          <el-input v-model="s_jdObj.jd_addr" placeholder="地区关键字"></el-input>
         </el-form-item>
         <el-form-item label="id">
-          <el-input v-model="jdObj.jd_id" placeholder="景点id"></el-input>
+          <el-input v-model="s_jdObj.jd_id" placeholder="景点id"></el-input>
         </el-form-item>
         <el-form-item label="名字">
-          <el-input v-model="jdObj.jd_name" placeholder="景点名字"></el-input>
+          <el-input v-model="s_jdObj.jd_name" placeholder="景点名字"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSubmit">查询</el-button>
@@ -55,12 +55,40 @@
               label="操作"
               width="150">
               <template slot-scope="scope">
-                <el-button @click="updateJd" type="text" size="small">修改</el-button>
-                <el-button @click="showJd" type="text" size="small">查看</el-button>
-                <el-button @click="deleteJd" type="text" size="small">删除</el-button>
+                <el-button @click="updateJd(scope.row)" type="text" size="small">修改</el-button>
+                <el-button @click="showJd(scope.row)" type="text" size="small"><a :href="'http://localhost:9999/jump2showJd?jd_id='+scope.row.jd_id">查看</a></el-button>
+                <el-button @click="deleteJd(scope.row)" type="text" size="small">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
+          <!--弹出框-->
+          <div>
+            <el-dialog title="修改景点" :visible.sync="dialogFormVisible">
+              <el-form label-position="left" label-width="80px" :model="jdObj">
+                <el-form-item label="名称">
+                  <el-input v-model="jdObj.jd_name"></el-input>
+                </el-form-item>
+                <el-form-item label="地址">
+                  <el-cascader
+                    size="large"
+                    :options="options"
+                    v-model="area"
+                    @change="addrChange">
+                  </el-cascader>
+                </el-form-item>
+                <el-form-item label="景点信息" prop="desc">
+                  <el-input style="resize:none"  type="textarea" v-model="jdObj.jd_info"></el-input>
+                </el-form-item>
+                <el-form-item label="图片url">
+                  <el-input v-model="jdObj.jd_imgs"></el-input>
+                </el-form-item>
+              </el-form>
+              <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisible = false">取 消</el-button>
+                <el-button type="primary" @click="postUpdate">确 定</el-button>
+              </div>
+            </el-dialog>
+          </div>
           <!--分页-->
           <div class="pageInation">
             <el-pagination
@@ -68,6 +96,7 @@
               :pager-count="5"
               layout="prev, pager, next"
               :total="totalRows"
+              :current-page.sync="current"
               @current-change="current_change">
             </el-pagination>
           </div>
@@ -77,12 +106,19 @@
 </template>
 
 <script>
+  import { regionData,CodeToText ,TextToCode} from 'element-china-area-data'
     export default {
         name: "SelectJd",
       data:function () {
           return {
+            area:[],
             url:'http://192.168.2.101:9999',
             jdObj:{
+              jd_addr:'',
+              jd_name:'',
+              jd_id:''
+            },
+            s_jdObj:{
               jd_addr:'',
               jd_name:'',
               jd_id:''
@@ -91,29 +127,122 @@
             pageNow:1,
             totalPages:1,
             totalRows:1,
-            current:1
+            current:1,
+            formLabelWidth: '120px',
+            options: regionData,
+            dialogFormVisible: false,
           }
       },
       methods:{
-        updateJd:function () {
+        postUpdate:function () {
+          console.log(this.jdObj);
+          var params = new URLSearchParams();
+          params.append('jd_name', this.jdObj.jd_name);       //你要传给后台的参数值 key/value
+          params.append('jd_addr', this.jdObj.jd_addr);
+          params.append('jd_info', this.jdObj.jd_info);
+          params.append('imgs', this.jdObj.jd_imgs);
+          params.append('jd_id', this.jdObj.jd_id);
+          this.$axios({
+            method: 'post',
+            url:this.url+'/updateJd',
+            data:params
+          }).then((res)=>{
+            if(res.data == 'success'){
+              this.$message({
+                message: '景点修改成功',
+                type: 'success'
+              });
+              this.dialogFormVisible = false
+              this.refresh()
+            }else {
+              this.$message({
+                message: '景点已经存在了，请修改景点名字吧',
+                type: 'warning'
+              });
+            }
+
+          });
         },
-        showJd:function () {
+        addrChange:function () {
+          //地址改变
+          var array = [] ;
+          this.area.forEach(function (item,index,arr) {
+            array[index] = CodeToText[item] ;
+          })
+          this.jdObj.jd_addr = array.join(',') ;
         },
-        deleteJd:function () {
+        updateJd:function (jdObj) {
+          this.dialogFormVisible = true
+          this.jdObj.jd_id = jdObj.jd_id
+          this.jdObj.jd_name = jdObj.jd_name
+          this.jdObj.jd_addr = jdObj.jd_addr
+          this.jdObj.jd_info = jdObj.jd_info
+          this.jdObj.jd_imgs = jdObj.imgs
+          var array = jdObj.jd_addr.split(',')
+
+          this.area[0] = TextToCode[array[0]].code
+          this.area[1] = TextToCode[array[0]][array[1]].code
+          this.area[2] = TextToCode[array[0]][array[1]][array[2]].code
+        },
+        showJd:function (jdObj) {
+          console.log('oh...')
+          var jd_id = jdObj.jd_id
+          this.$axios.get("http://192.168.2.101:9999/showJd?jd_id="+jd_id, {}).then(response => {
+            console.log("get发送Ajax请求成功", response.data);
+          }).catch(response=> {
+            console.log('false_2_send_msg')
+          })
+        },
+        deleteJd:function (jdObj) {
+          console.log(jdObj);
+          var jd_name = jdObj.jd_name ;
+          var jd_id = jdObj.jd_id ;
+          //  删除
+          this.$confirm('此操作将永久删除景点: '+jd_name+' ,是否继续?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消'
+          }).then(() => {
+            this.$axios.get("http://192.168.2.101:9999/deleteJd?jd_id="+jd_id, {}).then(response => {
+              console.log("get发送Ajax请求成功", response.data);
+              if(response.data == 'success'){
+                this.$message({
+                  type: 'success',
+                  message: '删除成功!'
+                });
+                this.refresh() ;
+              }else{
+                this.$message({
+                  type: 'info',
+                  message: '删除失败!'
+                });
+              }
+            }).catch(response=> {
+              this.$message({
+                type: 'success',
+                message: '删除成功!'
+              });
+            })
+
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消删除'
+            });
+          });
         },
         current_change:function (pageNow) {
           this.pageNow = pageNow ;
           this.refresh()
         },
         refresh:function () {
-          for(var item in this.jdObj){
-            var val = this.jdObj[item] ;
+          for(var item in this.s_jdObj){
+            var val = this.s_jdObj[item] ;
             if(val　== undefined || val.trim() == '' ){
-              this.jdObj[item]= '' ;
+              this.s_jdObj[item]= '' ;
             }
           }
-          var url = `http://localhost:9999/getSomeJds?pageNow=${this.pageNow}&jd_addr=${this.jdObj.jd_addr}&jd_name=${this.jdObj.jd_name}&jd_id=${this.jdObj.jd_id}`
-          var url = `${this.url}/getSomeJds?pageNow=${this.pageNow}&jd_addr=${this.jdObj.jd_addr}&jd_name=${this.jdObj.jd_name}&jd_id=${this.jdObj.jd_id}`
+          var url = `${this.url}/getSomeJds?pageNow=${this.pageNow}&jd_addr=${this.s_jdObj.jd_addr}&jd_name=${this.s_jdObj.jd_name}&jd_id=${this.s_jdObj.jd_id}`
+          console.log(url,">>>>")
           this.$axios.get(url, {}).then(response => {
             console.log("get发送Ajax请求成功", response.data)
             this.jdData = response.data.jdData
@@ -124,7 +253,8 @@
           })
         },
         onSubmit:function () {
-          this.pageNow = 1  ;
+          this.current = 1
+          this.current_change(1)
           this.refresh()
         }
       }
