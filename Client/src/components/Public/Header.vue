@@ -2,83 +2,149 @@
   <div class="container-global">
     <header>
       <div class="top-header-nav">
-        <h1><a href="index.html"><img src="../../assets/logo.png" alt="Home Page"></a></h1>
+        <h1><a href="/"><img src="../../assets/img/logo.png" alt="Home Page"></a></h1>
         <nav class="menu-block">
           <ul class="nav-menu">
-            <li :class="item.clazz" v-for="item in navMenuArr">
-              <a :href="item.hrefUrl">{{item.itemText}}</a>
-              <div class="down-menu" v-show="item.dropDown">
-                <ul>
-                  <li>选项</li>
-                </ul>
-              </div>
+            <li class="menu-strategy">
+              <router-link to="/strategy">旅游攻略</router-link>
+            </li>
+            <li class="menu-scenic">
+              <router-link to="/scenic">景区</router-link>
+            </li>
+            <li class="menu-community">
+              <router-link to="">社区</router-link>
+            </li>
+            <li class="menu-about">
+              <!--<el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">-->
+              <!--<el-submenu index="1">-->
+              <!--<template slot="title"><router-link to="/about">关于</router-link></template>-->
+              <!--<el-menu-item index="1-1">选项1</el-menu-item>-->
+              <!--<el-menu-item index="1-2">选项2</el-menu-item>-->
+              <!--<el-menu-item index="1-3">选项3</el-menu-item>-->
+              <!--</el-submenu>-->
+              <!--</el-menu>-->
+              <router-link to="/about">关于</router-link>
             </li>
           </ul>
         </nav>
+        <div class="entrance">
+          <ul>
+            <li class="menu-login" v-show="showRegister">
+              <router-link to="/showLogin">登录</router-link>
+            </li>
+            <li class="menu-register" v-show="showRegister">
+              <router-link to="/showRegist">注册</router-link>
+            </li>
+            <li class="menu-personal" v-show="showPersonal">
+              <el-dropdown placement="top" size="small">
+                <div class="el-dropdown-link">
+                  <!--<router-link to="/personal"> {{userMessage}}</router-link>-->
+                  <span> {{userMessage}}</span>
+                  <i class="el-icon-caret-bottom"></i>
+                </div>
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item><router-link to="/personal">个人中心</router-link></el-dropdown-item>
+                  <el-dropdown-item><span @click="exitSelf">退出</span></el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
+            </li>
+          </ul>
+        </div>
       </div>
     </header>
+
   </div>
 </template>
 
 <script>
+  import {delCookie} from '../../util/utilCookie';
+
   export default {
     name: "header",
+    components: {},
     data() {
       return {
-        navMenuArr: [
-          {clazz: 'menu-home', itemText: '首页', dropDown: false, hrefUrl: '#'},
-          {clazz: 'menu-about', itemText: '关于', dropDown: false, downMenu: [], hrefUrl: '#'},
-          {clazz: 'menu-strategy', itemText: '攻略', dropDown: false, downMenu: [], hrefUrl: '#'},
-          {clazz: 'menu-scenic', itemText: '景点', dropDown: false, downMenu: [], hrefUrl: '#'},
-          {clazz: 'menu-login', itemText: '登录', dropDown: false, hrefUrl: ''},
-          {clazz: 'menu-register', itemText: '注册', dropDown: false, hrefUrl: '#'}
-        ]
+        showRegister: true,
+        showPersonal: false,
+        userMessage: '',
+      }
+    },
+    created: function () {
+      this.userMessage = this.getNameToCookie();
+      // console.log('页面cookie');
+      // console.log(this.getNameToCookie());
+      // console.log(document.cookie);
+      if (this.userMessage) {
+        this.showRegister = false;
+        this.showPersonal = true;
+      } else {
+        this.showRegister = true;
+        this.showPersonal = false;
+      }
+    },
+    methods: {
+      //用户退出
+      exitSelf: function () {
+        let del = delCookie(this.userMessage);
+        if (del) {
+          this.showRegister = true;
+          this.showPersonal = false;
+        } else {
+          this.showRegister = false;
+          this.showPersonal = true;
+          console.log('删除失败')
+        }
+      },
+      //获取浏览器cookie
+      getNameToCookie: function () {
+        let index = document.cookie.indexOf("\=", 0);
+        return document.cookie.substring(0, index);
       }
     }
   }
 </script>
 
 <style scoped>
+  a {
+    text-decoration: none;
+    color: #ff6f61;
+  }
   header {
-    height: 125px;
+    width: 1272px;
+    height: 100px;
     display: block;
     position: relative;
+    top: 0;
+    left: -61px;
     z-index: 999;
-    padding-bottom: 105px;
-  }
+    padding-bottom: 25px;
 
-  header a:hover {
-    color: #000;
   }
 
   header h1 {
-    position: absolute;
-    float: none;
     width: 168px;
-    top: 31px;
-    left: 50%;
-    margin-left: -84px;
     height: 168px;
-    z-index: 1000;
-  }
-
-  header h1 a {
-    display: block;
+    display: inline-block;
     overflow: hidden;
-    text-indent: -999px;
-    transition: 0s ease;
-    -o-transition: 0s ease;
-    -webkit-transition: 0s ease;
+    z-index: 1000;
+    position: absolute;
+    top: 25px;
   }
 
   header h1 a img {
+    width: 100%;
+    height: 100%;
     display: block;
   }
 
   .menu-block {
-    position: relative;
-    padding-left: 144px;
-    padding-top: 97px;
+    width: 1000px;
+    height: auto;
+    /*line-height: 153px;*/
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    right: 61px;
   }
 
   .menu-block .nav-menu {
@@ -87,20 +153,19 @@
     font-size: 100%;
     border: 0;
     outline: 0;
-    vertical-align: top;
   }
 
-  .nav-menu li {
+  .menu-block .nav-menu li {
+    width: 96px;
+    height: 24px;
+    margin: 40px 0 0;
+    padding: 0 30px;
     float: left;
     display: list-item;
-    margin-right: 60px;
-    position: relative;
-    zoom:1
+    zoom: 1
   }
-  .nav-menu li.menu-strategy {
-    margin-right: 273px;
-  }
-  .nav-menu li::after {
+
+  li::after {
     content: "";
     height: 0;
     line-height: 0;
@@ -109,20 +174,51 @@
     clear: both
   }
 
-  .nav-menu li a {
-    text-transform: uppercase;
-    font-size: 28px;
+  .nav-menu li a,
+  .entrance li a {
+    width: auto;
+    font-size: 24px;
+    line-height: 24px;
     font-family: 'Pathway Gothic One', sans-serif;
-    color: #fff;
-    position: relative;
     font-weight: 300;
-    line-height: 28px;
+    color: #fff;
     z-index: 999;
-    position: relative;
+    text-decoration: none;
   }
 
-  .nav-menu .menu-home a {
-    color: #263555;
-    border-color: #a92c11;
+  .entrance {
+    position: absolute;
+    top: 40px;
+    right: 81px;
   }
+
+  .entrance li {
+    width: auto;
+    height: 20px;
+    line-height: 20px;
+    padding: 0 10px;
+    float: left;
+    vertical-align: bottom;
+    zoom: 1;
+  }
+
+  .entrance li:nth-of-type(1) {
+    border-right: 1px solid #ff6f61;
+  }
+
+  .entrance li a,
+  .entrance li span
+  {
+    font-size: 20px;
+    color: #ff6f61;
+    text-decoration: none;
+  }
+  .entrance li a:hover {
+    text-decoration: underline;
+  }
+
+  .el-icon-caret-bottom {
+    font-size: 20px;
+  }
+
 </style>
